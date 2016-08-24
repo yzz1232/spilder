@@ -1,15 +1,28 @@
 package demo.splider;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import demo.dao.SpliderMapper;
+import demo.entity.Splider;
+
 import java.util.ArrayList;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.model.OOSpider;
 import us.codecraft.webmagic.pipeline.JsonFilePipeline;
+import us.codecraft.webmagic.pipeline.Pipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+@Component
 public class LagouPageProcessor implements PageProcessor{
+	
+	@Autowired
+	private Pipeline Pipeline;
 	
 	private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
 	
@@ -40,6 +53,7 @@ public class LagouPageProcessor implements PageProcessor{
 		page.putField("type",page.getHtml().xpath("div[@class='industry']/text()").all());
 		*/
 		
+		/***
 		page.putField("salay",page.getHtml().xpath("//dd[@class='job_request']/p/span[@class='red']/text()"));
 		page.putField("year",page.getHtml().xpath("//dd[@class='job_request']/p/span[3]/text()"));
 		page.putField("yaoqiu",page.getHtml().xpath("//dd[@class='job_bt']/p").all());
@@ -47,8 +61,28 @@ public class LagouPageProcessor implements PageProcessor{
 		page.putField("job",page.getHtml().xpath("//dl/dt/h1/@title"));
 		page.putField("companyName", page.getHtml().xpath("//dt/a/img/@alt"));
 		page.putField("address", page.getHtml().xpath("//div[@class='work_addr']/a[2]/text()"));
+		System.out.println("1");
+		System.out.println(page.getResultItems().get("salay"));
+		String s = page.getResultItems().get("salay").toString();
+		if(s==null){
+			System.out.println("2");
+			page.setSkip(true);
+		}
+		*/
 		
-		List<String> list = page.getHtml().links().regex("(http://www.lagou.com/jobs/\\d+)").all();
+		
+		Splider splider = new Splider();
+		splider.setCompanyName(page.getHtml().xpath("//dt/a/img/@alt").toString());
+		splider.setJobName(page.getHtml().xpath("//dl/dt/h1/@title").toString());
+		splider.setSalary(page.getHtml().xpath("//dd[@class='job_request']/p/span[@class='red']/text()").toString());
+		if(splider.getCompanyName() == null){
+			page.setSkip(true);
+		}else{
+			page.putField("lagou", splider);
+		}
+		
+		
+		List<String> list = page.getHtml().xpath("//div[@class='content_left']").links().regex("(http://www.lagou.com/jobs/\\d+)").all();
 		List<String> list2 = new ArrayList<String>();
 		for(int i=0;i<list.size();i++){
 			list2.add(list.get(i)+".html");
@@ -56,13 +90,27 @@ public class LagouPageProcessor implements PageProcessor{
 		page.addTargetRequests(list2);
 	}	   
 	
-	public static void main(String[] args) {
+	public  void process() {
 		Spider
 		.create(new LagouPageProcessor())
 		//.addUrl("http://www.lagou.com/zhaopin/Java")
-		//.addUrl("http://www.lagou.com/zhaopin/Java?px=default&gj=3年及以下&city=杭州&district=余杭区#filterBox")
-		.addUrl("http://www.lagou.com/jobs/2183908.html")
-		//.addPipeline(new JsonFilePipeline("D:\\webmagic"))
+		.addUrl("http://www.lagou.com/zhaopin/Java?px=default&gj=3年及以下&city=杭州&district=余杭区#filterBox")
+		//.addUrl("http://www.lagou.com/jobs/2183908.html")
+		//.addPipeline(new JsonFilePipeline("D:\\webmagic\\"))
+		.addPipeline(Pipeline)
+		.thread(5)
+		.run();
+	}
+	
+	public  static void main(String[] args){
+		OOSpider
+		.create(new LagouPageProcessor())
+		
+		//.addUrl("http://www.lagou.com/zhaopin/Java")
+		.addUrl("http://www.lagou.com/zhaopin/Java?px=default&gj=3年及以下&city=杭州&district=余杭区#filterBox")
+		//.addUrl("http://www.lagou.com/jobs/2183908.html")
+		//.addPipeline(new JsonFilePipeline("D:\\webmagic\\"))
+		.addPipeline(new PipelineImpl())
 		.thread(5)
 		.run();
 	}
