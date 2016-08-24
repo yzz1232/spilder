@@ -1,4 +1,5 @@
 # spilder
+基于webmagic 整合spring springmvc mybatis 数据库mysql
 拉钩招聘信息
 
 1 访问127.0.0.1:8080/splider/hello.do 开始爬取数据
