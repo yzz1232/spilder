@@ -1,6 +1,7 @@
 package demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class TestController {
 	@Autowired
 	private LagouPageProcessor lagou;
 	
+	@Autowired
+	private SpliderMapper spliderMapper;
+	
 	@RequestMapping("/hello")
 	@ResponseBody
 	public String test(){
@@ -27,4 +31,15 @@ public class TestController {
 		return "hello";
 	}
 	
+	@RequestMapping("/getAllInfo")
+	@ResponseBody
+	public List<Splider> getAllInfo(){
+		List<Splider> list = spliderMapper.getAllInfo();
+		return list;
+	}
+	
+	@RequestMapping("/index")
+	public String toIndex(){
+		return "test";
+	}
 }
