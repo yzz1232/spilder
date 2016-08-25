@@ -1,6 +1,14 @@
 package demo.splider;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.PostMethod;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -10,6 +18,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 public class ZhihuPageProcessor implements PageProcessor{
 
+	
 	private Site site = Site.me()
 						/**
 						.setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0")
@@ -31,6 +40,7 @@ public class ZhihuPageProcessor implements PageProcessor{
 						*/
 						.setRetryTimes(3).setSleepTime(1000);
 	
+	
 	public Site getSite() {
 		
 		return site;
@@ -50,10 +60,22 @@ public class ZhihuPageProcessor implements PageProcessor{
 		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws HttpException, IOException {
+		ZhihuPageProcessor zz = new ZhihuPageProcessor();
+		 String url = "https://www.zhihu.com/login/email";
+		 HttpClient httpClient = new HttpClient();  
+		 PostMethod postMethod = new PostMethod(url); 
+		NameValuePair[] data = {new NameValuePair("email","875930090@qq.com"),new NameValuePair("password","zzy1994,./")};
+		postMethod.setRequestBody(data);
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+		System.out.println(httpClient.executeMethod(postMethod));
+		Cookie[] cookies = httpClient.getState().getCookies();
+		for(int i=0;i<cookies.length;i++){
+			zz.site.addCookie(cookies[i].getDomain(),cookies[i].getName(),cookies[i].getValue());
+		}
 		Spider
-		.create(new ZhihuPageProcessor())
-		.addUrl("https://www.zhihu.com/topic/19550447/top-answers")
+		.create(zz)
+		.addUrl("https://www.zhihu.com")
 		.addPipeline(new ConsolePipeline())
 		.thread(5)
 		.run();
