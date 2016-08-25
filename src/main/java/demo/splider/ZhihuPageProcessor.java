@@ -65,7 +65,7 @@ public class ZhihuPageProcessor implements PageProcessor{
 		 String url = "https://www.zhihu.com/login/email";
 		 HttpClient httpClient = new HttpClient();  
 		 PostMethod postMethod = new PostMethod(url); 
-		NameValuePair[] data = {new NameValuePair("email","875930090@qq.com"),new NameValuePair("password","zzy1994,./")};
+		NameValuePair[] data = {new NameValuePair("email","XXX"),new NameValuePair("password","XX")};
 		postMethod.setRequestBody(data);
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 		System.out.println(httpClient.executeMethod(postMethod));
