@@ -16,7 +16,7 @@ public class HttpClientTest {
 	static HttpClient httpClient = new HttpClient();  
 	public static void main(String[] args) throws HttpException, IOException {
 		PostMethod postMethod = new PostMethod(url); 
-		NameValuePair[] data = {new NameValuePair("email","875930090@qq.com"),new NameValuePair("password","zzy1994,./")};
+		NameValuePair[] data = {new NameValuePair("email","XXX"),new NameValuePair("password","XXXX")};
 		postMethod.setRequestBody(data);
 		
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
