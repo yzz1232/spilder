@@ -14,7 +14,7 @@ public interface SpliderMapper {
 	@Insert("insert into splider(`companyName`,`jobName`,`salary`,`year`,`address`,`require`,`url`) values(#{companyName},#{jobName},#{salary},#{year},#{address},#{require},#{url})")
 	int insertSpilder(Splider splider);
 	
-	@Select("select * from splider limit 1,100")
+	@Select("select * from splider limit 1,2")
 	List<Splider> getAllInfo();
 	
 	

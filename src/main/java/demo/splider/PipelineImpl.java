@@ -8,7 +8,7 @@ import demo.entity.Splider;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
-@Component
+
 public class PipelineImpl implements Pipeline{
 	
 	@Autowired

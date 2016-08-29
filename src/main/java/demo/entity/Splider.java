@@ -1,7 +1,14 @@
 package demo.entity;
 
-public class Splider {
+import java.io.Serializable;
+
+public class Splider implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1662485012897709947L;
+
 	private String companyName;
 	
 	private String jobName;

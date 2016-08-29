@@ -13,4 +13,15 @@
 	
 	<context:component-scan base-package="demo.dao" />
 	<context:component-scan base-package="demo.splider" />
+	<context:component-scan base-package="demo.redis" />
+	<context:component-scan base-package="demo.service.impl" />
+
+	<bean id="DrivenManagerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/test" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+	
+	<bean class="demo.util.SpringContextHelper" />
 </beans>

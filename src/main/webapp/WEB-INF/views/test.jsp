@@ -10,6 +10,17 @@
 	<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+   <form action="filesUpload.do" method="post"  
+        enctype="multipart/form-data">  
+        <p>  
+            选择文件:<input type="file" name="files">  
+        <p>  
+            选择文件:<input type="file" name="files">  
+        <p>  
+            选择文件:<input type="file" name="files">  
+        <p>  
+            <input type="submit" value="提交">  
+    </form>  
 
 <div ng-app="myApp" ng-controller="customersCtrl"> 
 
@@ -33,6 +44,10 @@
     <td>{{ x.url }}</td>
   </tr>
 </table>
+ 
+
+<img src="/img/1472370315695.jpg" class="img-circle">
+
 
 </div>
 

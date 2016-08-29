@@ -23,29 +23,39 @@
             </list>  
         </property>
 	</bean>
-	
+
 	<!-- 配置连接数据源 -->
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+	<bean id="dataSource" class="com.alibaba.druid.pool.xa.DruidXADataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${driver}" />
 		<property name="url" value="${url}" />
 		<property name="username" value="${username}" />
 		<property name="password" value="${userpass}" />
-		<!-- 初始化连接大小 -->
-		<property name="initialSize" value="${initialSize}"></property>
-		<!-- 连接池最大数量 -->
-		<property name="maxActive" value="${maxActive}"></property>
-		<!-- 连接池最大空闲 -->
-		<property name="maxIdle" value="${maxIdle}"></property>
-		<!-- 连接池最小空闲 -->
-		<property name="minIdle" value="${minIdle}"></property>
-		<!-- 获取连接最大等待时间 -->
-		<property name="maxWait" value="${maxWait}"></property>
 	</bean>
+	
+	<!-- 配置连接数据源2 -->
+	<bean id="dataSource2" class="com.alibaba.druid.pool.xa.DruidXADataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${driver2}" />
+		<property name="url" value="${url2}" />
+		<property name="username" value="${username2}" />
+		<property name="password" value="${userpass2}" />
+	</bean>
+	
+	<bean id="multipleDataSource" class="demo.server.MultipleDataSource">
+		<property name="defaultTargetDataSource" ref="dataSource" />
+		<property name="targetDataSources">
+			<map>
+				<entry key="dataSource" value-ref="dataSource" />
+				<entry key="dataSource2" value-ref="dataSource2" />
+			</map>
+		</property>
+	</bean>
+	
 	
 	<!-- spring和MyBatis整合，配置mybatis的配置映射文件 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="multipleDataSource" />
 		<!-- 自动扫描mapping.xml文件 
 		<property name="mapperLocations" value="classpath:sqlMap/*.xml"></property>
 		<property name="typeAliasesPackage" value="demo.entity" />
@@ -56,6 +66,17 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 		  <property name="mapperInterface" value="demo.dao.SpliderMapper" />
 	</bean>
+	
+	<bean id="zhihuMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="demo.dao.ZhihuMapper" />
+	</bean>
+	
+	<bean id="loginMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="demo.dao.LoginMapper" />
+	</bean>
+	
 	<!-- mybatis映射文件所对应的Mapper，也就是dao 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="cmcc.demo.dao" />
